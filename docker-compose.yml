@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  ui:
+    container_name: minesweeper-ui
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    image: minesweeper-ui:lts
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./ui:/app/ui
+    env_file: .env.development
+
+  api:
+    container_name: minesweeper-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: minesweeper-api:lts
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./api:/app/api
+    env_file: .env.development

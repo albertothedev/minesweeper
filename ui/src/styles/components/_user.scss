@@ -1,0 +1,38 @@
+.user {
+  @include upper;
+  width: 210px;
+
+  &--signIn {
+    height: 158px;
+  }
+
+  &--signUp {
+    height: 188px;
+  }
+
+  &--welcome {
+    height: 82px;
+    width: 210px;
+  }
+
+  &__buttons {
+    margin: 8px;
+
+    &__button {
+      width: 50%;
+      height: 30px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0;
+      @include upper;
+
+      &:active {
+        @include pressed;
+      }
+
+      &--active {
+        @include lower;
+      }
+    }
+  }
+}

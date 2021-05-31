@@ -1,0 +1,72 @@
+.leaderboard {
+  width: 280px;
+  height: 358px;
+  @include upper;
+
+  &__buttons {
+    margin: 8px;
+
+    &__button {
+      font-weight: 500;
+      width: 86px;
+      margin: 0;
+      padding: 0;
+      height: 30px;
+      display: inline-block;
+      @include upper;
+      cursor: pointer;
+
+      &:active {
+        @include pressed;
+      }
+
+      &--active {
+        @include lower;
+      }
+    }
+  }
+
+  &__loading {
+    height: 298px;
+    margin: 8px;
+    @include lower;
+    padding: 5px 10px 0 10px;
+  }
+
+  &__rankings {
+    height: 298px;
+    margin: 8px;
+    @include lower;
+    overflow: auto;
+
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+
+    &__game {
+      @include lower;
+      border-left: none !important;
+      border-right: none !important;
+
+      width: 100%;
+      box-sizing: border-box;
+      height: 30px;
+
+      display: flex;
+      cursor: default;
+      justify-content: space-between;
+      padding: 0 10px;
+
+      &:first-child {
+        border-top: none !important;
+        height: 26px;
+      }
+
+      &__player,
+      &__time {
+        height: 22px;
+        line-height: 1.4;
+      }
+    }
+  }
+}

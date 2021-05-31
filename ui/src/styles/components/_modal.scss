@@ -1,0 +1,11 @@
+.modal {
+  background-color: $regular-color;
+  @include upper;
+  padding: 0 5px;
+  height: 25px;
+  width: 774px;
+  margin: auto;
+  position: fixed;
+  margin-top: -30px;
+  text-align: center;
+}

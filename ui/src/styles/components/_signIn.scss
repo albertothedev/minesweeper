@@ -1,0 +1,24 @@
+.signIn {
+  margin: 8px;
+
+  &__username,
+  &__password {
+    width: 100%;
+    height: 30px;
+    @include lower;
+  }
+
+  &__submit {
+    width: 100%;
+    margin-top: 8px;
+    padding: 0;
+    height: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    @include upper;
+
+    &:active {
+      @include pressed;
+    }
+  }
+}

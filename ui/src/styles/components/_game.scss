@@ -1,0 +1,20 @@
+.game {
+  margin: 0 20px;
+
+  @include upper;
+
+  &--easy {
+    height: 364px;
+    width: 244px;
+  }
+
+  &--medium {
+    height: 532px;
+    width: 412px;
+  }
+
+  &--hard {
+    height: 532px;
+    width: 748px;
+  }
+}
