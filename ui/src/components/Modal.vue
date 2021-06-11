@@ -1,6 +1,6 @@
 <template>
   <div class="modal">
-    <span>{{ message }}</span>
+    <span className="modal__message">{{ message }}</span>
   </div>
 </template>
 

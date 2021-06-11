@@ -27,46 +27,73 @@
       </button>
     </div>
 
-    <SignIn v-if="userMode === 'signIn'" @signIn="signIn" />
+    <form
+      class="user__signIn"
+      v-if="userMode === 'signIn'"
+      @submit.prevent="signIn"
+    >
+      <input
+        className="user__signIn__username"
+        type="text"
+        name="name"
+        placeholder="USERNAME"
+      />
+      <input
+        className="user__signIn__password"
+        type="password"
+        name="password"
+        placeholder="PASSWORD"
+      />
 
-    <SignUp v-if="userMode === 'signUp'" @signUp="signIn" />
+      <button class="user__signIn__submit">
+        SUBMIT
+      </button>
+    </form>
 
-    <Welcome
-      v-if="userMode === 'welcome'"
-      @logOut="logOut"
-      :username="username"
-    />
+    <form
+      class="user__signUp"
+      v-if="userMode === 'signUp'"
+      @submit.prevent="signUp"
+    >
+      <input
+        className="user__signUp__username"
+        type="text"
+        name="name"
+        placeholder="USERNAME"
+      />
+      <input
+        className="user__signUp__password"
+        type="password"
+        name="password"
+        placeholder="PASSWORD"
+      />
+      <input
+        className="user__signUp__confirmPassword"
+        type="password"
+        name="password"
+        placeholder="CONFIRM PASSWORD"
+      />
+
+      <button class="user__signUp__submit">SUBMIT</button>
+    </form>
+
+    <div class="user__welcome" v-if="userMode === 'welcome'">
+      <p class="user__welcome__username">{{ usernameTemp }}</p>
+      <button class="user__welcome__logOut" @click="logOut">LOG OUT</button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { defineComponent, onMounted, ref, reactive } from "vue";
-
-import SignIn from "./User/SignIn.vue";
-import SignUp from "./User/SignUp.vue";
-import Welcome from "./User/Welcome.vue";
+import { defineComponent, onMounted, ref, inject } from "vue";
 
 export default defineComponent({
-  components: {
-    SignIn,
-    SignUp,
-    Welcome,
-  },
-
   setup(props, context) {
     let userMode = ref<"signIn" | "welcome" | "signUp">("signIn");
-    let username = ref<string>("");
+    let usernameTemp = ref<string>("");
 
-    function signIn(param: string): void {
-      username.value = param.toUpperCase();
-      userMode.value = "welcome";
-    }
-
-    function logOut(): void {
-      username.value = "";
-      userMode.value = "signIn";
-    }
+    const openModal: any = inject("openModal");
 
     onMounted(() =>
       axios
@@ -74,17 +101,103 @@ export default defineComponent({
           withCredentials: true,
         })
         .then((res: AxiosResponse) => {
-          username.value = res.data.username;
+          usernameTemp.value = res.data.username;
           userMode.value = "welcome";
         })
-        .catch((error: AxiosError) => console.error({ error }))
+        .catch((error: AxiosError) => console.error(error))
     );
+
+    function signIn(): void {
+      const username: string = (<HTMLInputElement>(
+        document.querySelector(".user__signIn__username")
+      )).value.trim();
+      const password: string = (<HTMLInputElement>(
+        document.querySelector(".user__signIn__password")
+      )).value.trim();
+
+      if (username.length !== 0 && password.length !== 0)
+        axios
+          .post(
+            `${process.env.VUE_APP_MINESWEEPER_API_URL}/signIn`,
+            {
+              username,
+              password,
+            },
+            { withCredentials: true }
+          )
+          .then((res: AxiosResponse): void => {
+            usernameTemp.value = res.data.username;
+            userMode.value = "welcome";
+          })
+          .catch((error: AxiosError): void =>
+            openModal(error.response!.data.message)
+          );
+      else openModal("please fill all fields");
+    }
+
+    function signUp(): void {
+      const username: string = (<HTMLInputElement>(
+        document.querySelector(".user__signUp__username")
+      )).value.trim();
+      const password: string = (<HTMLInputElement>(
+        document.querySelector(".user__signUp__password")
+      )).value.trim();
+      const confirmPassword = (<HTMLInputElement>(
+        document.querySelector(".user__signUp__confirmPassword")
+      )).value.trim();
+
+      if (
+        password === confirmPassword &&
+        password.length !== 0 &&
+        confirmPassword.length !== 0 &&
+        username.length !== 0
+      )
+        axios
+          .post(
+            `${process.env.VUE_APP_MINESWEEPER_API_URL}/signUp`,
+            { username, password },
+            { withCredentials: true }
+          )
+          .then((res: AxiosResponse): void => {
+            usernameTemp.value = res.data.username;
+            userMode.value = "welcome";
+            openModal(res.data.message);
+          })
+          .catch((error: AxiosError): void =>
+            openModal(error.response!.data.message)
+          );
+      else if (
+        password !== confirmPassword &&
+        password.length !== 0 &&
+        confirmPassword.length !== 0 &&
+        username.length !== 0
+      )
+        openModal("passwords do not match");
+      else if (
+        password.length === 0 ||
+        confirmPassword.length === 0 ||
+        username.length === 0
+      )
+        openModal("please fill all fields");
+    }
+
+    function logOut(): void {
+      axios
+        .get(`${process.env.VUE_APP_MINESWEEPER_API_URL}/logOut`, {
+          withCredentials: true,
+        })
+        .then((): void => {
+          usernameTemp.value = "";
+          userMode.value = "signIn";
+        });
+    }
 
     return {
       userMode,
-      username,
+      usernameTemp,
       signIn,
       logOut,
+      signUp,
     };
   },
 });

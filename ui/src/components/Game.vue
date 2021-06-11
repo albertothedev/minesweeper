@@ -1,23 +1,114 @@
 <template>
   <div :class="`game game--${gameMode}`">
-    <GameSelection />
-    <Scoreboard />
-    <Board
-      @setGameState="(state) => (gameState = state)"
-      :gameState="gameState"
-      :board="board"
-    />
+    <div class="game__gameSelection">
+      <button
+        @click="init('easy')"
+        :class="
+          `game__gameSelection__button ${
+            gameMode === 'easy' ? 'game__gameSelection__button--active' : ''
+          }`
+        "
+      >
+        EASY
+      </button>
+
+      <button
+        @click="init('medium')"
+        :class="
+          `game__gameSelection__button ${
+            gameMode === 'medium' ? 'game__gameSelection__button--active' : ''
+          }`
+        "
+      >
+        MEDIUM
+      </button>
+
+      <button
+        @click="init('hard')"
+        :class="
+          `game__gameSelection__button ${
+            gameMode === 'hard' ? 'game__gameSelection__button--active' : ''
+          }`
+        "
+      >
+        HARD
+      </button>
+    </div>
+
+    <div class="game__scoreboard">
+      <div class="game__scoreboard__flags">{{ flagsLeft }}</div>
+      <button
+        class="game__scoreboard__faceButton"
+        @click="() => init(gameMode)"
+      >
+        <img
+          class="game__scoreboard__faceButton__face"
+          :src="currentFace"
+          alt="Face"
+        />
+      </button>
+      <div class="game__scoreboard__time">{{ time }}</div>
+    </div>
+
+    <div class="game__board">
+      <div v-for="cell in board">
+        <div
+          :id="cell.id"
+          :class="
+            `game__board__cell${cell.open ? ' game__board__cell--open' : ''}`
+          "
+          @mousedown.left="(e) => leftClick(e)"
+          @contextmenu.prevent="(e) => rightClick(e)"
+          v-if="cell"
+        >
+          <img
+            v-if="
+              cell.mined && !cell.flagged && cell.open && gameState === 'over'
+            "
+            :src="mine"
+            class="game__board__cell--mine"
+            alt="Mine"
+          />
+          <img
+            v-if="
+              !cell.mined && cell.flagged && cell.open && gameState === 'over'
+            "
+            :src="mineWrong"
+            class="game__board__cell--mineClicked"
+            alt="Mine exploded"
+          />
+          <img
+            v-if="
+              cell.adjacentMines && !cell.mined && cell.open && !cell.flagged
+            "
+            :src="numbers[cell.adjacentMines - 1]"
+            class="game__board__cell--number"
+            alt="Number of mines"
+          />
+
+          <img
+            v-if="cell.flagged && !cell.open"
+            :src="flag"
+            class="game__board__cell--flag"
+            alt="Flag"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { useStore } from "vuex";
-import { defineComponent, ref, provide, inject, computed } from "vue";
-
-import Board from "./Game/Board.vue";
-import Scoreboard from "./Game/Scoreboard.vue";
-import GameSelection from "./Game/GameSelection.vue";
+import {
+  defineComponent,
+  ref,
+  provide,
+  inject,
+  computed,
+  onMounted,
+} from "vue";
 
 import { TCell, TAdjacentCell, TGame } from "../types/index";
 
@@ -26,12 +117,19 @@ import faceLoss from "../assets/faceLoss.png";
 import faceWin from "../assets/faceWin.png";
 import faceFlag from "../assets/faceFlag.png";
 
+import mine from "../assets/mine.png";
+import mineWrong from "../assets/mineWrong.png";
+import flag from "../assets/flag.png";
+import number1 from "../assets/number1.png";
+import number2 from "../assets/number2.png";
+import number3 from "../assets/number3.png";
+import number4 from "../assets/number4.png";
+import number5 from "../assets/number5.png";
+import number6 from "../assets/number6.png";
+import number7 from "../assets/number7.png";
+import number8 from "../assets/number8.png";
+
 export default defineComponent({
-  components: {
-    GameSelection,
-    Scoreboard,
-    Board,
-  },
   setup(props, context) {
     const store = useStore();
 
@@ -59,18 +157,25 @@ export default defineComponent({
 
     const openModal: any = inject("openModal");
 
-    provide("leftClick", leftClick);
-    provide("rightClick", rightClick);
-    provide("init", init);
-    provide("incrementTime", incrementTime);
-    provide("endGame", endGame);
-    provide("isGameOver", isGameOver);
+    const numbers: Array<string> = [
+      number1,
+      number2,
+      number3,
+      number4,
+      number5,
+      number6,
+      number7,
+      number8,
+    ];
 
-    provide("gameMode", gameMode);
-    provide("currentFace", currentFace);
-    provide("flagsLeft", flagsLeft);
-    provide("gameState", gameState);
-    provide("time", time);
+    onMounted(() =>
+      setInterval(() => {
+        if (gameState.value === "playing") {
+          incrementTime();
+          isGameOver();
+        }
+      }, 1000)
+    );
 
     function incrementTime() {
       time.value++;
@@ -349,6 +454,18 @@ export default defineComponent({
       games,
       setGames,
       addGame,
+      numbers,
+      flag,
+      mine,
+      mineWrong,
+      number1,
+      number2,
+      number3,
+      number4,
+      number5,
+      number6,
+      number7,
+      number8,
     };
   },
 });

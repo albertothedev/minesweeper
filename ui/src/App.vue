@@ -9,8 +9,6 @@
 
 <script lang="ts">
 import { defineComponent, ref, provide } from "vue";
-import { useStore } from "vuex";
-import { computed } from "vue";
 
 import Game from "./components/Game.vue";
 import Leaderboard from "./components/Leaderboard.vue";
