@@ -20,10 +20,7 @@ userSchema.pre<UserDoc>("save", function (next) {
   next();
 });
 
-userSchema.methods.validatePassword = function (
-  plaintext: string,
-  callback: Function
-) {
+userSchema.methods.validatePassword = function (plaintext: string, callback: Function) {
   return callback(null, bcrypt.compareSync(plaintext, this.password));
 };
 

@@ -12,6 +12,20 @@ services:
       - ./ui:/app/ui
     env_file: .env.development
 
+  db:
+    container_name: minesweeper-db
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    image: minesweeper-db:lts
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./db/config.js:/docker-entrypoint-initdb.d/config.js
+    env_file: .env.development
+    environment:
+      MONGO_INITDB_DATABASE: minesweeper
+
   api:
     container_name: minesweeper-api
     build:

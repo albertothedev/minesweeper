@@ -24,6 +24,8 @@ app.use(express.json());
 mongoose.connect(<string>process.env.MINESWEEPER_MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  user: <string>process.env.MINESWEEPER_MONGODB_USER,
+  pass: <string>process.env.MINESWEEPER_MONGODB_PASSWORD,
 });
 
 const db: mongoose.Connection = mongoose.connection;
@@ -40,6 +42,4 @@ require("./routes/leaderboard")(app);
 require("./routes/user")(app);
 require("./routes/logOut")(app);
 
-app.listen(process.env.MINESWEEPER_PORT || 5002, () =>
-  console.log(`Listening on PORT ${process.env.MINESWEEPER_PORT || 5002}`)
-);
+app.listen(process.env.MINESWEEPER_PORT || 5002, () => console.log(`Listening on PORT ${process.env.MINESWEEPER_PORT || 5002}`));

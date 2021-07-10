@@ -1,98 +1,50 @@
 <template>
   <div :class="`game game--${gameMode}`">
     <div class="game__gameSelection">
-      <button
-        @click="init('easy')"
-        :class="
-          `game__gameSelection__button ${
-            gameMode === 'easy' ? 'game__gameSelection__button--active' : ''
-          }`
-        "
-      >
+      <button @click="init('easy')" :class="`game__gameSelection__button ${gameMode === 'easy' ? 'game__gameSelection__button--active' : ''}`">
         EASY
       </button>
 
-      <button
-        @click="init('medium')"
-        :class="
-          `game__gameSelection__button ${
-            gameMode === 'medium' ? 'game__gameSelection__button--active' : ''
-          }`
-        "
-      >
+      <button @click="init('medium')" :class="`game__gameSelection__button ${gameMode === 'medium' ? 'game__gameSelection__button--active' : ''}`">
         MEDIUM
       </button>
 
-      <button
-        @click="init('hard')"
-        :class="
-          `game__gameSelection__button ${
-            gameMode === 'hard' ? 'game__gameSelection__button--active' : ''
-          }`
-        "
-      >
+      <button @click="init('hard')" :class="`game__gameSelection__button ${gameMode === 'hard' ? 'game__gameSelection__button--active' : ''}`">
         HARD
       </button>
     </div>
 
     <div class="game__scoreboard">
       <div class="game__scoreboard__flags">{{ flagsLeft }}</div>
-      <button
-        class="game__scoreboard__faceButton"
-        @click="() => init(gameMode)"
-      >
-        <img
-          class="game__scoreboard__faceButton__face"
-          :src="currentFace"
-          alt="Face"
-        />
+      <button class="game__scoreboard__faceButton" @click="() => init(gameMode)">
+        <img class="game__scoreboard__faceButton__face" :src="currentFace" alt="Face" />
       </button>
       <div class="game__scoreboard__time">{{ time }}</div>
     </div>
 
     <div class="game__board">
-      <div v-for="cell in board">
-        <div
-          :id="cell.id"
-          :class="
-            `game__board__cell${cell.open ? ' game__board__cell--open' : ''}`
-          "
-          @mousedown.left="(e) => leftClick(e)"
-          @contextmenu.prevent="(e) => rightClick(e)"
-          v-if="cell"
-        >
-          <img
-            v-if="
-              cell.mined && !cell.flagged && cell.open && gameState === 'over'
-            "
-            :src="mine"
-            class="game__board__cell--mine"
-            alt="Mine"
-          />
-          <img
-            v-if="
-              !cell.mined && cell.flagged && cell.open && gameState === 'over'
-            "
-            :src="mineWrong"
-            class="game__board__cell--mineClicked"
-            alt="Mine exploded"
-          />
-          <img
-            v-if="
-              cell.adjacentMines && !cell.mined && cell.open && !cell.flagged
-            "
-            :src="numbers[cell.adjacentMines - 1]"
-            class="game__board__cell--number"
-            alt="Number of mines"
-          />
+      <div
+        v-for="cell in board"
+        :id="cell.id"
+        :class="`game__board__cell${cell.open ? ' game__board__cell--open' : ''}`"
+        @mousedown.left="(e) => leftClick(e)"
+        @contextmenu.prevent="(e) => rightClick(e)"
+      >
+        <img v-if="cell.mined && !cell.flagged && cell.open && gameState === 'over'" :src="mine" class="game__board__cell--mine" alt="Mine" />
+        <img
+          v-if="!cell.mined && cell.flagged && cell.open && gameState === 'over'"
+          :src="mineWrong"
+          class="game__board__cell--mineClicked"
+          alt="Mine exploded"
+        />
+        <img
+          v-if="cell.adjacentMines && !cell.mined && cell.open && !cell.flagged"
+          :src="numbers[cell.adjacentMines - 1]"
+          class="game__board__cell--number"
+          alt="Number of mines"
+        />
 
-          <img
-            v-if="cell.flagged && !cell.open"
-            :src="flag"
-            class="game__board__cell--flag"
-            alt="Flag"
-          />
-        </div>
+        <img v-if="cell.flagged && !cell.open" :src="flag" class="game__board__cell--flag" alt="Flag" />
       </div>
     </div>
   </div>
@@ -101,14 +53,7 @@
 <script lang="ts">
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { useStore } from "vuex";
-import {
-  defineComponent,
-  ref,
-  provide,
-  inject,
-  computed,
-  onMounted,
-} from "vue";
+import { defineComponent, ref, provide, inject, computed, onMounted } from "vue";
 
 import { TCell, TAdjacentCell, TGame } from "../types/index";
 
@@ -134,8 +79,7 @@ export default defineComponent({
     const store = useStore();
 
     const dataFetched = computed(() => store.state.dataFetched);
-    const setDataFetched = (state: boolean) =>
-      store.commit("setDataFetched", state);
+    const setDataFetched = (state: boolean) => store.commit("setDataFetched", state);
     const games = computed(() => store.state.games);
     const setGames = (games: Array<TGame>) => store.commit("setGames", games);
     const addGame = (game: TGame) => store.commit("addGame", game);
@@ -157,16 +101,7 @@ export default defineComponent({
 
     const openModal: any = inject("openModal");
 
-    const numbers: Array<string> = [
-      number1,
-      number2,
-      number3,
-      number4,
-      number5,
-      number6,
-      number7,
-      number8,
-    ];
+    const numbers: Array<string> = [number1, number2, number3, number4, number5, number6, number7, number8];
 
     onMounted(() =>
       setInterval(() => {
@@ -185,6 +120,8 @@ export default defineComponent({
       gameState.value = "over";
       currentFace.value = faceLoss;
     }
+
+    init("easy");
 
     function init(buttonType: "easy" | "medium" | "hard") {
       time.value = 0;
@@ -235,22 +172,16 @@ export default defineComponent({
       for (let i = 0; i < minesLeft.value; i++) {
         let randomCell: number = Math.floor(Math.random() * board.value.length);
 
-        while (board.value[randomCell].mined)
-          randomCell = Math.floor(Math.random() * board.value.length);
+        while (board.value[randomCell].mined) randomCell = Math.floor(Math.random() * board.value.length);
 
         board.value[randomCell].mined = true;
         minedCells.value.push(board.value[randomCell].id);
 
-        Object.values(getAdjacentCells(board.value[randomCell].id)).forEach(
-          (adjacentCell) => {
-            if (adjacentCell)
-              board.value[getBoardPosition(adjacentCell)].adjacentMines++;
-          }
-        );
+        Object.values(getAdjacentCells(board.value[randomCell].id)).forEach((adjacentCell) => {
+          if (adjacentCell) board.value[getBoardPosition(adjacentCell)].adjacentMines++;
+        });
       }
     }
-
-    init("easy");
 
     function leftClick(e: any) {
       e.preventDefault();
@@ -286,12 +217,10 @@ export default defineComponent({
         gameState.value = "over";
 
         for (let i: number = 0; i < flaggedCells.value.length; i++)
-          if (!board.value[getBoardPosition(flaggedCells.value[i])].mined)
-            board.value[getBoardPosition(flaggedCells.value[i])].open = true;
+          if (!board.value[getBoardPosition(flaggedCells.value[i])].mined) board.value[getBoardPosition(flaggedCells.value[i])].open = true;
 
         for (let j: number = 0; j < minedCells.value.length; j++)
-          if (!board.value[getBoardPosition(minedCells.value[j])].flagged)
-            board.value[getBoardPosition(minedCells.value[j])].open = true;
+          if (!board.value[getBoardPosition(minedCells.value[j])].flagged) board.value[getBoardPosition(minedCells.value[j])].open = true;
       }
 
       isGameWon(cell, "left");
@@ -323,10 +252,8 @@ export default defineComponent({
 
     function isGameWon(cell: TCell, click: "left" | "right") {
       if (
-        board.value.filter((elm: TCell) => elm.open && !elm.mined).length ===
-          board.value.length - minesLeft.value ||
-        board.value.filter((elm: TCell) => elm.flagged && elm.mined).length ===
-          minesLeft.value
+        board.value.filter((elm: TCell) => elm.open && !elm.mined).length === board.value.length - minesLeft.value ||
+        board.value.filter((elm: TCell) => elm.flagged && elm.mined).length === minesLeft.value
       ) {
         setDataFetched(false);
 
@@ -393,27 +320,22 @@ export default defineComponent({
       if (row !== 1) {
         adjacentCells.topCenter = `cell-${row - 1}-${column}`;
 
-        if (column !== 1)
-          adjacentCells.topLeft = `cell-${row - 1}-${column - 1}`;
+        if (column !== 1) adjacentCells.topLeft = `cell-${row - 1}-${column - 1}`;
 
-        if (column !== boardSize.value.columns)
-          adjacentCells.topRight = `cell-${row - 1}-${column + 1}`;
+        if (column !== boardSize.value.columns) adjacentCells.topRight = `cell-${row - 1}-${column + 1}`;
       }
 
       if (row !== boardSize.value.rows) {
         adjacentCells.bottomCenter = `cell-${row + 1}-${column}`;
 
-        if (column !== 1)
-          adjacentCells.bottomLeft = `cell-${row + 1}-${column - 1}`;
+        if (column !== 1) adjacentCells.bottomLeft = `cell-${row + 1}-${column - 1}`;
 
-        if (column !== boardSize.value.columns)
-          adjacentCells.bottomRight = `cell-${row + 1}-${column + 1}`;
+        if (column !== boardSize.value.columns) adjacentCells.bottomRight = `cell-${row + 1}-${column + 1}`;
       }
 
       if (column !== 1) adjacentCells.middleLeft = `cell-${row}-${column - 1}`;
 
-      if (column !== boardSize.value.columns)
-        adjacentCells.middleRight = `cell-${row}-${column + 1}`;
+      if (column !== boardSize.value.columns) adjacentCells.middleRight = `cell-${row}-${column + 1}`;
 
       return adjacentCells;
     }
@@ -423,8 +345,7 @@ export default defineComponent({
       let adjacentMines: number = 0;
 
       Object.entries(adjacentCells).forEach((entry) => {
-        if (entry[1] && board.value[getBoardPosition(entry[1])].mined)
-          adjacentMines++;
+        if (entry[1] && board.value[getBoardPosition(entry[1])].mined) adjacentMines++;
       });
 
       return adjacentMines;
