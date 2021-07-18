@@ -11,7 +11,7 @@ const app: express.Application = express();
 app.use(
   cors({
     credentials: true,
-    origin: process.env.MINESWEEPER_UI_URL,
+    origin: process.env.MINESWEEPER_UI_URL || "http://localhost:8080",
   })
 );
 
