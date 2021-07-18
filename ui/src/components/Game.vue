@@ -276,13 +276,10 @@ export default defineComponent({
 
         currentFace.value = faceWin;
 
-        const token: string = document.cookie;
-
         axios
           .post(
             `${process.env.VUE_APP_MINESWEEPER_API_URL}/saveGame`,
             {
-              token,
               gameMode: gameMode.value,
               time: time.value,
             },

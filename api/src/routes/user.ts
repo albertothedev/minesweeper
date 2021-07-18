@@ -3,7 +3,7 @@ import express from "express";
 
 module.exports = (app: express.Application) =>
   app.get("/user", (req: express.Request, res: express.Response) =>
-    passport.authenticate("jwt", { session: false }, (err, user, info) => {
+    passport.authenticate("JWTFromCookie", { session: false }, (err, user, info) => {
       if (err) return res.status(500).send(err);
 
       if (info) return res.status(400).send(info);

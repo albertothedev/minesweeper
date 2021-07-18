@@ -43,8 +43,7 @@ passport.use(
         .findOne()
         .exec((err: any, user: any) => {
           if (err) return done(err);
-          else if (user)
-            return done(null, false, { message: "username already in use" });
+          else if (user) return done(null, false, { message: "username already in use" });
           else {
             let newUser = new User({ username, password });
             newUser
@@ -56,16 +55,14 @@ passport.use(
   )
 );
 
-const jwtOptions = {
-  jwtFromRequest: (req: express.Request) => req.cookies.jwt,
-  secretOrKey: process.env.MINESWEEPER_JWT_SECRET,
-  passReqToCallback: true,
-};
-
 passport.use(
-  "jwt",
+  "JWTFromCookie",
   new JwtStrategy(
-    jwtOptions,
+    {
+      jwtFromRequest: (req: express.Request) => req.cookies.jwt,
+      secretOrKey: process.env.MINESWEEPER_JWT_SECRET,
+      passReqToCallback: true,
+    },
     (req: express.Request, jwt_payload: any, done: any) =>
       User.findOne()
         .where({ _id: jwt_payload._id })
