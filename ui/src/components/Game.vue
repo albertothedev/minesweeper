@@ -122,15 +122,15 @@ export default defineComponent({
     onMounted(() =>
       setInterval(() => {
         if (gameState.value === "playing") {
-          incrementTime();
-          isGameOver();
+          time.value++;
+
+          if (time.value === maxTime.value) {
+            currentFace.value = faceLoss;
+            gameState.value = "over";
+          }
         }
       }, 1000)
     );
-
-    function incrementTime() {
-      time.value++;
-    }
 
     function endGame() {
       gameState.value = "over";
@@ -302,13 +302,6 @@ export default defineComponent({
       }
     }
 
-    function isGameOver(): void {
-      if (time.value === maxTime.value) {
-        currentFace.value = faceLoss;
-        gameState.value = "over";
-      }
-    }
-
     function getBoardPosition(id: string) {
       return board.value.findIndex((cell: TCell) => cell.id === id);
     }
@@ -379,7 +372,6 @@ export default defineComponent({
       getBoardPosition,
       getAdjacentCells,
       getAdjacentMines,
-      isGameOver,
       isGameWon,
       dataFetched,
       setDataFetched,
