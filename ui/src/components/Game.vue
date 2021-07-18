@@ -30,13 +30,27 @@
         @mousedown.left="(e) => leftClick(e)"
         @contextmenu.prevent="(e) => rightClick(e)"
       >
-        <img v-if="cell.mined && !cell.flagged && cell.open && gameState === 'over'" :src="mine" class="game__board__cell--mine" alt="Mine" />
+        <img
+          v-if="cell.mined && !cell.flagged && cell.open && gameState === 'over' && clickedCellId !== cell.id"
+          :src="mine"
+          class="game__board__cell--mine"
+          alt="Mine"
+        />
+
+        <img
+          :src="mineClicked"
+          v-if="cell.mined && !cell.flagged && cell.open && gameState === 'over' && clickedCellId === cell.id"
+          class="game__board__cell--mine"
+          alt="Mine"
+        />
+
         <img
           v-if="!cell.mined && cell.flagged && cell.open && gameState === 'over'"
-          :src="mineWrong"
+          :src="flagWrong"
           class="game__board__cell--mineClicked"
           alt="Mine exploded"
         />
+
         <img
           v-if="cell.adjacentMines && !cell.mined && cell.open && !cell.flagged"
           :src="numbers[cell.adjacentMines - 1]"
@@ -63,7 +77,8 @@ import faceWin from "../assets/faceWin.png";
 import faceFlag from "../assets/faceFlag.png";
 
 import mine from "../assets/mine.png";
-import mineWrong from "../assets/mineWrong.png";
+import mineClicked from "../assets/mineClicked.png";
+import flagWrong from "../assets/flagWrong.png";
 import flag from "../assets/flag.png";
 import number1 from "../assets/number1.png";
 import number2 from "../assets/number2.png";
@@ -98,6 +113,7 @@ export default defineComponent({
     let board = ref<Array<TCell>>([]);
     let currentFace = ref<string>(face);
     let maxTime = ref<number>(999);
+    let clickedCellId = ref<string | null>(null);
 
     const openModal: any = inject("openModal");
 
@@ -214,6 +230,7 @@ export default defineComponent({
 
       if (cell.mined) {
         currentFace.value = faceLoss;
+        clickedCellId.value = cell.id;
         gameState.value = "over";
 
         for (let i: number = 0; i < flaggedCells.value.length; i++)
@@ -280,10 +297,7 @@ export default defineComponent({
             setDataFetched(true);
             openModal(res.data.message);
           })
-          .catch((error: AxiosError) => {
-            console.error(error);
-            openModal(error.response!.data.message);
-          });
+          .catch((error: AxiosError) => openModal(error.response!.data.message));
 
         gameState.value = "over";
 
@@ -378,7 +392,8 @@ export default defineComponent({
       numbers,
       flag,
       mine,
-      mineWrong,
+      mineClicked,
+      flagWrong,
       number1,
       number2,
       number3,
@@ -387,6 +402,7 @@ export default defineComponent({
       number6,
       number7,
       number8,
+      clickedCellId,
     };
   },
 });
