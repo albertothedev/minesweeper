@@ -21,17 +21,11 @@ app.use(passport.initialize());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-mongoose.connect(<string>process.env.MINESWEEPER_MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  user: <string>process.env.MINESWEEPER_MONGODB_USER,
-  pass: <string>process.env.MINESWEEPER_MONGODB_PASSWORD,
-});
+main().catch((err) => console.log(err));
 
-const db: mongoose.Connection = mongoose.connection;
-
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => console.log("Database connected"));
+async function main() {
+  await mongoose.connect(process.env.MINESWEEPER_MONGODB_URI as string);
+}
 
 require("./config/passport");
 
