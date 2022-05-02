@@ -294,7 +294,7 @@ export default defineComponent({
             setDataFetched(true);
             openModal(res.data.message);
           })
-          .catch((error: AxiosError) => openModal(error.response!.data.message));
+          .catch((error: any) => openModal(error.response!.data.message));
 
         gameState.value = "over";
 

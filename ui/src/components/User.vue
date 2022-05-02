@@ -14,9 +14,7 @@
       <input className="user__signIn__username" type="text" name="name" placeholder="USERNAME" required />
       <input className="user__signIn__password" type="password" name="password" placeholder="PASSWORD" required />
 
-      <button class="user__signIn__submit">
-        SUBMIT
-      </button>
+      <button class="user__signIn__submit">SUBMIT</button>
     </form>
 
     <form class="user__signUp" v-if="userMode === 'signUp'" @submit.prevent="signUp">
@@ -75,7 +73,7 @@ export default defineComponent({
             usernameTemp.value = res.data.username;
             userMode.value = "welcome";
           })
-          .catch((error: AxiosError): void => openModal(error.response!.data.message));
+          .catch((error: any): void => openModal(error.response!.data.message));
       else openModal("please fill all fields");
     }
 
@@ -92,7 +90,7 @@ export default defineComponent({
             userMode.value = "welcome";
             openModal(res.data.message);
           })
-          .catch((error: AxiosError): void => openModal(error.response!.data.message));
+          .catch((error: any): void => openModal(error.response!.data.message));
       else if (password !== confirmPassword && password.length !== 0 && confirmPassword.length !== 0 && username.length !== 0)
         openModal("passwords do not match");
       else if (password.length === 0 || confirmPassword.length === 0 || username.length === 0) openModal("please fill all fields");
