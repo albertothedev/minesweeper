@@ -1,42 +1,62 @@
 # Minesweeper
 
-Minesweeper clone built with Vue, Node.js (Express), and MongoDB. TypeScript is enabled globally. SCSS is used for styling, Vuex for state management, Passport and JWT for user authentication, Bcrypt for password hashing, Mongoose for database manipulation, and Docker for local development.
+Minesweeper clone built with Vue, Node.js (Express), and MongoDB. TypeScript is enabled globally. SCSS is used for styling, Vuex for state management, Passport and JWT for user authentication, Bcrypt for password hashing and Mongoose for database manipulation.
 
 ## Getting started
 
-1. Installs dependencies on frontend and backend (/ui and /api).
+1. Install root dependencies:
+
+   ```sh
+   npm i
+   ```
+
+2. Install dependencies on the frontend and the backend:
 
    ```sh
    npm run install
    ```
 
-2. Builds the images for the frontend, the backend, and the database and creates three containers from them.
+3. Start the development server on the frontend and the backend:
 
    ```sh
-   npm run start
+   npm run dev
    ```
 
 ## Environment variables
 
-Specified in /.env.development.
+### Frontend
+
+- **VUE_APP_MINESWEEPER_API_URL**: Backend URL.
+
+### Backend
 
 - **MINESWEEPER_PORT**: Port the backend will run on.
+- **MINESWEEPER_UI_URL**: Frontend URL.
+- **MINESWEEPER_MONGODB_URI**: MongoDB database URI.
 - **MINESWEEPER_JWT_SECRET**: JWT secret.
-- **MINESWEEPER_MONGODB_URL**: MongoDB database URL.
-- **MINESWEEPER_MONGODB_USER**: MongoDB database user.
-- **MINESWEEPER_MONGODB_PASSWORD**: MongoDB database password.
-- **VUE_APP_MINESWEEPER_API_URL**: Backend URL.
 
 ## Other commands
 
-- Removes images, containers, and volumes.
+- Install dependencies on the frontend:
 
   ```sh
-  npm run stop
+  npm run install:ui
   ```
 
-- Runs **stop** and **start** consecutively.
+- Install dependencies on the backend:
 
   ```sh
-  npm run restart
+  npm run install:api
+  ```
+
+- Start the frontend development server:
+
+  ```sh
+  npm run dev:ui
+  ```
+
+- Start the backend development server:
+
+  ```sh
+  npm run dev:api
   ```
