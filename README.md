@@ -1,22 +1,16 @@
 # Minesweeper
 
-Minesweeper clone built with Vue, Node.js (Express), and MongoDB. TypeScript is enabled globally. SCSS is used for styling, Vuex for state management, Passport and JWT for user authentication, Bcrypt for password hashing and Mongoose for database manipulation.
+Minesweeper game with leaderboard built with Next.js and MongoDB. TypeScript is enabled globally. SCSS is used for styling, Redux for state management, Passport and JWT for user authentication, Bcrypt for password hashing, and Mongoose for database manipulation.
 
 ## Getting started
 
-1. Install root dependencies:
+1. Install dependencies:
 
    ```sh
    npm i
    ```
 
-2. Install dependencies on the frontend and the backend:
-
-   ```sh
-   npm run install
-   ```
-
-3. Start the development server on the frontend and the backend:
+2. Start a development server:
 
    ```sh
    npm run dev
@@ -24,39 +18,27 @@ Minesweeper clone built with Vue, Node.js (Express), and MongoDB. TypeScript is 
 
 ## Environment variables
 
-### Frontend
+Specified in ./.env.local.
 
-- **VUE_APP_MINESWEEPER_API_URL**: Backend URL.
-
-### Backend
-
-- **MINESWEEPER_PORT**: Port the backend will run on.
-- **MINESWEEPER_UI_URL**: Frontend URL.
-- **MINESWEEPER_MONGODB_URI**: MongoDB database URI.
-- **MINESWEEPER_JWT_SECRET**: JWT secret.
+- **MONGODB_URI**: MongoDB database URI.
+- **JWT_SECRET**: JWT secret.
 
 ## Other commands
 
-- Install dependencies on the frontend:
+- Start a production server:
 
   ```sh
-  npm run install:ui
+  npm start
   ```
 
-- Install dependencies on the backend:
+- Build the app for production usage:
 
   ```sh
-  npm run install:api
+  npm run build
   ```
 
-- Start the frontend development server:
+- Lint the app:
 
   ```sh
-  npm run dev:ui
-  ```
-
-- Start the backend development server:
-
-  ```sh
-  npm run dev:api
+  npm run lint
   ```
