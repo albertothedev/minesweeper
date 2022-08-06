@@ -8,22 +8,22 @@ import { setDataFetched, addGame } from "../redux";
 
 import { TCell, TAdjacentCell } from "types/index";
 
-import face from "assets/face.png";
-import faceLoss from "assets/faceLoss.png";
-import faceWin from "assets/faceWin.png";
-import faceFlag from "assets/faceFlag.png";
-import mine from "assets/mine.png";
-import mineClicked from "assets/mineClicked.png";
-import flagWrong from "assets/flagWrong.png";
-import flag from "assets/flag.png";
-import number1 from "assets/number1.png";
-import number2 from "assets/number2.png";
-import number3 from "assets/number3.png";
-import number4 from "assets/number4.png";
-import number5 from "assets/number5.png";
-import number6 from "assets/number6.png";
-import number7 from "assets/number7.png";
-import number8 from "assets/number8.png";
+import face from "assets/face.webp";
+import faceLoss from "assets/faceLoss.webp";
+import faceWin from "assets/faceWin.webp";
+import faceFlag from "assets/faceFlag.webp";
+import mine from "assets/mine.webp";
+import mineClicked from "assets/mineClicked.webp";
+import flagWrong from "assets/flagWrong.webp";
+import flag from "assets/flag.webp";
+import number1 from "assets/number1.webp";
+import number2 from "assets/number2.webp";
+import number3 from "assets/number3.webp";
+import number4 from "assets/number4.webp";
+import number5 from "assets/number5.webp";
+import number6 from "assets/number6.webp";
+import number7 from "assets/number7.webp";
+import number8 from "assets/number8.webp";
 
 import useInterval from "utils/useInterval";
 
