@@ -12,7 +12,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>Minesweeper</title>
-        <link rel="icon" href="/favicon.webp" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <React.StrictMode>
         <Provider store={store}>
