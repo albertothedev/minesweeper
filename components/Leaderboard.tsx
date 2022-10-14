@@ -10,7 +10,7 @@ export default function Leaderboard() {
 
   const { dataFetched, games } = useSelector((state: RootState) => state);
 
-  let [getType, setGetType] = useState<"easy" | "medium" | "hard">("easy");
+  const [getType, setGetType] = useState<"easy" | "medium" | "hard">("easy");
 
   useEffect(() => {
     axios
@@ -25,7 +25,7 @@ export default function Leaderboard() {
   }, [dispatch]);
 
   function convertTime(gameTime: number): string {
-    let newTime: string = "";
+    let newTime = "";
 
     if (Math.floor(gameTime / 60) === 0) newTime = "00:";
     else if (Math.floor(gameTime / 60) < 10)

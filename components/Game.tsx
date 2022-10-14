@@ -1,4 +1,9 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+  type MouseEvent,
+  type KeyboardEvent,
+} from "react";
 import { type StaticImageData } from "next/image";
 import Image from "next/future/image";
 import axios, { AxiosResponse, AxiosError } from "axios";
@@ -31,6 +36,8 @@ type Props = {
   setModalMessage: (param: string) => void;
 };
 
+const maxTime = 999;
+
 export default function Game(props: Props) {
   const dispatch = useDispatch();
 
@@ -51,7 +58,6 @@ export default function Game(props: Props) {
   );
   const [board, setBoard] = useState<Array<TCell>>([]);
   const [currentFace, setCurrentFace] = useState<StaticImageData>(face);
-  const [maxTime, setMaxTime] = useState<number>(999);
   const [clickedCellId, setClickedCellId] = useState<string | null>(null);
 
   const numbers: Array<StaticImageData> = [
@@ -76,13 +82,9 @@ export default function Game(props: Props) {
     }
   }, 1000);
 
-  function endGame() {
-    setGameState("over");
-    setCurrentFace(faceLoss);
-  }
-
   useEffect(() => {
     init("easy");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const init = (buttonType: "easy" | "medium" | "hard") => {
@@ -158,21 +160,24 @@ export default function Game(props: Props) {
     setBoard(boardCopy);
   };
 
-  const leftClick = (e: any) => {
+  const leftClick = (
+    e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>
+  ) => {
     e.preventDefault();
     const boardCopy = [...board];
 
-    const cell: TCell = board[getBoardPosition(e.target.id, board)];
+    const cell: TCell =
+      board[getBoardPosition((e.target as HTMLElement).id, board)];
 
     if (gameState === "over" || cell.open || cell.flagged) return;
 
     if (gameState === "waiting") setGameState("playing");
 
     const isCellEmpty = (adjacentCells: TAdjacentCell) => {
-      for (let id of Object.values(adjacentCells)) {
+      for (const id of Object.values(adjacentCells)) {
         if (id === null) continue;
 
-        let cell = boardCopy[getBoardPosition(id, boardCopy)];
+        const cell = boardCopy[getBoardPosition(id, boardCopy)];
 
         if (cell.open || cell.flagged || cell.mined) continue;
 
@@ -190,11 +195,11 @@ export default function Game(props: Props) {
     }
 
     if (cell.mined) {
-      for (let i: number = 0; i < flaggedCells.length; i++)
+      for (let i = 0; i < flaggedCells.length; i++)
         if (!boardCopy[getBoardPosition(flaggedCells[i], boardCopy)].mined)
           boardCopy[getBoardPosition(flaggedCells[i], boardCopy)].open = true;
 
-      for (let j: number = 0; j < minedCells.length; j++)
+      for (let j = 0; j < minedCells.length; j++)
         if (!boardCopy[getBoardPosition(minedCells[j], boardCopy)].flagged)
           boardCopy[getBoardPosition(minedCells[j], boardCopy)].open = true;
 
@@ -209,9 +214,10 @@ export default function Game(props: Props) {
     }
   };
 
-  const rightClick = (e: any): void => {
+  const rightClick = (e: MouseEvent<HTMLDivElement>): void => {
     e.preventDefault();
-    const cell: TCell = board[getBoardPosition(e.target.id, board)];
+    const cell: TCell =
+      board[getBoardPosition((e.target as HTMLElement).id, board)];
     const flaggedCellsCopy = [...flaggedCells];
 
     if (gameState === "over" || cell.open) return;
@@ -269,7 +275,7 @@ export default function Game(props: Props) {
           props.setModalMessage(res.data.message);
         })
         .catch((error: AxiosError) => {
-          props.setModalMessage((error.response!.data as any).message);
+          props.setModalMessage(error.message);
         });
 
       setGameState("over");
@@ -284,12 +290,12 @@ export default function Game(props: Props) {
 
   const getAdjacentCells = (
     id: string,
-    boardSizeCopy: Record<string, any>
+    boardSizeCopy: Record<string, unknown>
   ): TAdjacentCell => {
-    let row: number = parseInt(id.match(/\d+/g)![0]);
-    let column: number = parseInt(id.match(/\d+/g)![1]);
+    const row: number = parseInt((id.match(/\d+/g) as Array<string>)[0]);
+    const column: number = parseInt((id.match(/\d+/g) as Array<string>)[1]);
 
-    let adjacentCells: TAdjacentCell = {
+    const adjacentCells: TAdjacentCell = {
       topLeft: null,
       topCenter: null,
       topRight: null,
@@ -328,8 +334,8 @@ export default function Game(props: Props) {
   };
 
   const getAdjacentMines = (cellID: string): number => {
-    let adjacentCells: TAdjacentCell = getAdjacentCells(cellID, boardSize);
-    let adjacentMines: number = 0;
+    const adjacentCells: TAdjacentCell = getAdjacentCells(cellID, boardSize);
+    let adjacentMines = 0;
 
     Object.entries(adjacentCells).forEach((entry) => {
       if (entry[1] && board[getBoardPosition(entry[1], board)].mined)
@@ -393,7 +399,10 @@ export default function Game(props: Props) {
               cell.open ? " game__board__cell--open" : ""
             }`}
             onClick={(e) => leftClick(e)}
+            onKeyDown={(e) => leftClick(e)}
             onContextMenu={(e) => rightClick(e)}
+            role="button"
+            tabIndex={0}
             key={index}
           >
             {cell.mined &&
