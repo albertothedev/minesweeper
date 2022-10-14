@@ -15,7 +15,7 @@ export default async function addPlayer(
 
   const username = generateRandomUsername();
 
-  let newGame = new Game({
+  const newGame = new Game({
     username,
     gameMode: req.body.gameMode,
     time: req.body.time,

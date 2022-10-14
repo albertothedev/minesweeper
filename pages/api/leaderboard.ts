@@ -10,10 +10,10 @@ export default async function addPlayer(
 ) {
   await dbConnect();
 
-  Game.find({}).exec((err: any, results: Array<TGame>) => {
+  Game.find({}).exec((err, results: Array<TGame>) => {
     if (err) return res.status(500).send(err);
 
-    let games: Array<TGame> = [];
+    const games: Array<TGame> = [];
 
     results.forEach((result: TGame) => games.push(result));
     return res.send(games);

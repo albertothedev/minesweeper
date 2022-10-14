@@ -45,8 +45,8 @@ export default function User(props: Props) {
           setUsernameTemp(res.data.username);
           setUserMode("welcome");
         })
-        .catch((error: any): void =>
-          props.setModalMessage(error.response!.data.message)
+        .catch((error: AxiosError): void =>
+          props.setModalMessage(error.message)
         );
     else props.setModalMessage("please fill all fields");
   }
@@ -77,8 +77,8 @@ export default function User(props: Props) {
           setUserMode("welcome");
           props.setModalMessage(res.data.message);
         })
-        .catch((error: any): void =>
-          props.setModalMessage(error.response!.data.message)
+        .catch((error: AxiosError): void =>
+          props.setModalMessage(error.message)
         );
     else if (
       password !== confirmPassword &&
