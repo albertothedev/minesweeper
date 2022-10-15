@@ -9,7 +9,6 @@ import "sanitize.css/forms.css";
 import "sanitize.css/assets.css";
 import "sanitize.css/typography.css";
 import "sanitize.css/reduce-motion.css";
-// import "normalize.css";
 import "styles/main.scss";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
