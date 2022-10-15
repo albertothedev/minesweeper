@@ -4,7 +4,12 @@ import React from "react";
 import Head from "next/head";
 
 import store from "../redux";
-import "normalize.css";
+import "sanitize.css";
+import "sanitize.css/forms.css";
+import "sanitize.css/assets.css";
+import "sanitize.css/typography.css";
+import "sanitize.css/reduce-motion.css";
+// import "normalize.css";
 import "styles/main.scss";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
