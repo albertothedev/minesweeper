@@ -1,8 +1,8 @@
 .leaderboard {
   font-size: 1rem;
-  width: 28em;
+  width: 27.8em;
   height: 36.4em;
-  @include upper(0.2em);
+  @include upper(0.3em);
 
   &__buttons {
     font-size: 1.5em;
@@ -38,7 +38,7 @@
 
   &__rankings {
     font-size: 1.5em;
-    height: calc(30.6em / 1.5);
+    height: calc(30.4em / 1.5);
     margin: calc(0.8em / 1.5);
     @include lower(0.2em);
     overflow: auto;
