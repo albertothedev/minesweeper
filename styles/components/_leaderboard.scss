@@ -16,6 +16,7 @@
       height: 2em;
       display: inline-block;
       @include upper(0.2em);
+
       cursor: pointer;
 
       &:active {
@@ -33,7 +34,8 @@
     height: calc(30.6em / 1.5);
     margin: calc(0.8em / 1.5);
     @include lower(0.2em);
-    padding: 5px 10px 0 10px;
+
+    padding: 5px 10px 0;
   }
 
   &__rankings {
@@ -41,18 +43,18 @@
     height: calc(30.4em / 1.5);
     margin: calc(0.8em / 1.5);
     @include lower(0.2em);
+
     overflow: auto;
     padding: 0;
 
     &__game {
       @include lower(0.2em);
+
       border-left: none !important;
       border-right: none !important;
-
       width: 100%;
       box-sizing: border-box;
       height: 2em;
-
       display: flex;
       cursor: default;
       justify-content: space-between;
