@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import axios, { AxiosResponse, AxiosError } from "axios";
+import { useDispatch } from "react-redux";
+
+import { setUsername } from "../redux";
 
 type Props = {
   setModalMessage: (param: string) => void;
 };
 
 export default function User(props: Props) {
+  const dispatch = useDispatch();
   const [userMode, setUserMode] = useState<"signIn" | "welcome" | "signUp">(
     "signIn"
   );
@@ -19,9 +23,10 @@ export default function User(props: Props) {
       .then((res: AxiosResponse) => {
         setUsernameTemp(res.data.username);
         setUserMode("welcome");
+        dispatch(setUsername(res.data.username));
       })
       .catch((error: AxiosError) => console.error(error));
-  }, []);
+  }, [dispatch]);
 
   function signIn(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
