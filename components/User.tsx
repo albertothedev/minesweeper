@@ -23,7 +23,9 @@ export default function User(props: Props) {
       .catch((error: AxiosError) => console.error(error));
   }, []);
 
-  function signIn(): void {
+  function signIn(e: React.FormEvent<HTMLFormElement>): void {
+    e.preventDefault();
+
     const username: string = (
       document.querySelector(".user__signIn__username") as HTMLInputElement
     ).value.trim();
@@ -51,7 +53,9 @@ export default function User(props: Props) {
     else props.setModalMessage("please fill all fields");
   }
 
-  function signUp(): void {
+  function signUp(e: React.FormEvent<HTMLFormElement>): void {
+    e.preventDefault();
+
     const username: string = (
       document.querySelector(".user__signUp__username") as HTMLInputElement
     ).value.trim();
