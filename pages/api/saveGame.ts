@@ -11,14 +11,18 @@ export default async function addPlayer(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const game = req.body.data;
+
+  if (!game.username) {
+    game.username = generateRandomUsername();
+  }
+
   await dbConnect();
 
   const username = generateRandomUsername();
 
   const newGame = new Game({
-    username,
-    gameMode: req.body.gameMode,
-    time: req.body.time,
+    ...game,
   });
 
   newGame.save();

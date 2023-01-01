@@ -5,6 +5,7 @@ import { TGame } from "types/index";
 type TInitialState = {
   dataFetched: boolean;
   games: Array<TGame>;
+  username?: string;
 };
 
 const initialState: TInitialState = {
@@ -22,10 +23,13 @@ const rootSlice = createSlice({
       void (state.games = action.payload),
     addGame: (state, action: PayloadAction<TGame>) =>
       void state.games.push(action.payload),
+    setUsername: (state, action: PayloadAction<string>) =>
+      void (state.username = action.payload),
   },
 });
 
-export const { setDataFetched, setGames, addGame } = rootSlice.actions;
+export const { setDataFetched, setGames, addGame, setUsername } =
+  rootSlice.actions;
 
 const store = configureStore({ reducer: rootSlice.reducer });
 

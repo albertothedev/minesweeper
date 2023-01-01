@@ -7,9 +7,9 @@ import {
 import { type StaticImageData } from "next/image";
 import Image from "next/future/image";
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { setDataFetched, addGame } from "../redux";
+import { setDataFetched, addGame, RootState } from "../redux";
 
 import { TCell, TAdjacentCell } from "types/index";
 
@@ -40,6 +40,7 @@ const maxTime = 999;
 
 export default function Game(props: Props) {
   const dispatch = useDispatch();
+  const { username } = useSelector((state: RootState) => state);
 
   const [time, setTime] = useState<number>(0);
   const [minesLeft, setMinesLeft] = useState<number>(10);
@@ -258,6 +259,7 @@ export default function Game(props: Props) {
         .post(
           "/api/saveGame",
           {
+            username,
             gameMode: gameMode,
             time: time,
           },
