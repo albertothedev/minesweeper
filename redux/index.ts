@@ -23,7 +23,7 @@ const rootSlice = createSlice({
       void (state.games = action.payload),
     addGame: (state, action: PayloadAction<TGame>) =>
       void state.games.push(action.payload),
-    setUsername: (state, action: PayloadAction<string>) =>
+    setUsername: (state, action: PayloadAction<string | undefined>) =>
       void (state.username = action.payload),
   },
 });

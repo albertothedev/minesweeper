@@ -111,6 +111,7 @@ export default function User(props: Props) {
       })
       .then((): void => {
         setUsernameTemp("");
+        dispatch(setUsername(undefined));
         setUserMode("signIn");
       });
   }
