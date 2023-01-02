@@ -50,6 +50,7 @@ export default function User(props: Props) {
         )
         .then((res: AxiosResponse): void => {
           setUsernameTemp(res.data.username);
+          dispatch(setUsername(res.data.username));
           setUserMode("welcome");
         })
         .catch((error: AxiosError): void =>
