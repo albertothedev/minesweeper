@@ -38,13 +38,17 @@ export default function User(props: Props) {
       document.querySelector(".user__signIn__password") as HTMLInputElement
     ).value.trim();
 
+    const data = {
+      username,
+      password,
+    };
+
     if (username.length !== 0 && password.length !== 0)
       axios
         .post(
           "/api/signIn",
           {
-            username,
-            password,
+            data,
           },
           { withCredentials: true }
         )
@@ -74,6 +78,11 @@ export default function User(props: Props) {
       ) as HTMLInputElement
     ).value.trim();
 
+    const data = {
+      username,
+      password,
+    };
+
     if (
       password === confirmPassword &&
       password.length !== 0 &&
@@ -81,7 +90,7 @@ export default function User(props: Props) {
       username.length !== 0
     )
       axios
-        .post("/api/signUp", { username, password }, { withCredentials: true })
+        .post("/api/signUp", { data }, { withCredentials: true })
         .then((res: AxiosResponse): void => {
           setUsernameTemp(res.data.username);
           dispatch(setUsername(res.data.username));

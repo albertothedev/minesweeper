@@ -255,13 +255,17 @@ export default function Game(props: Props) {
 
       setCurrentFace(faceWin);
 
+      const data = {
+        username,
+        gameMode,
+        time,
+      };
+
       axios
         .post(
           "/api/saveGame",
           {
-            username,
-            gameMode: gameMode,
-            time: time,
+            data,
           },
           { withCredentials: true }
         )
