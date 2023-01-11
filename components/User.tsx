@@ -72,9 +72,9 @@ export default function User(props: Props) {
     const password: string = (
       document.querySelector(".user__signUp__password") as HTMLInputElement
     ).value.trim();
-    const confirmPassword = (
+    const passwordRepeat = (
       document.querySelector(
-        ".user__signUp__confirmPassword"
+        ".user__signUp__passwordRepeat"
       ) as HTMLInputElement
     ).value.trim();
 
@@ -84,9 +84,9 @@ export default function User(props: Props) {
     };
 
     if (
-      password === confirmPassword &&
+      password === passwordRepeat &&
       password.length !== 0 &&
-      confirmPassword.length !== 0 &&
+      passwordRepeat.length !== 0 &&
       username.length !== 0
     )
       axios
@@ -101,15 +101,15 @@ export default function User(props: Props) {
           props.setModalMessage(error.message)
         );
     else if (
-      password !== confirmPassword &&
+      password !== passwordRepeat &&
       password.length !== 0 &&
-      confirmPassword.length !== 0 &&
+      passwordRepeat.length !== 0 &&
       username.length !== 0
     )
       props.setModalMessage("passwords do not match");
     else if (
       password.length === 0 ||
-      confirmPassword.length === 0 ||
+      passwordRepeat.length === 0 ||
       username.length === 0
     )
       props.setModalMessage("please fill all fields");
@@ -189,7 +189,7 @@ export default function User(props: Props) {
             required
           />
           <input
-            className="user__signUp__confirmPassword"
+            className="user__signUp__passwordRepeat"
             type="password"
             name="password"
             placeholder="CONFIRM PASSWORD"
