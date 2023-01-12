@@ -4,7 +4,7 @@ import dbConnect from "config/mongoose";
 import Game from "models/game.model";
 import { TGame } from "types/index";
 
-export default async function addPlayer(
+export default async function leaderboard(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
