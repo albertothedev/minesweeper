@@ -2,7 +2,7 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 
 import passport from "passport";
 
-export default function addPlayer(req: NextApiRequest, res: NextApiResponse) {
+export default function user(req: NextApiRequest, res: NextApiResponse) {
   passport.authenticate(
     "JWTFromCookie",
     { session: false },

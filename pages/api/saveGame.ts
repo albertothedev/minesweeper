@@ -7,7 +7,7 @@ const generateRandomUsername = () => {
   return `anonymous${Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000}`;
 };
 
-export default async function addPlayer(
+export default async function saveGame(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
