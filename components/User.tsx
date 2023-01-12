@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { setUsername } from "../redux";
+import { setUsername, RootState } from "../redux";
 
 type Props = {
   setModalMessage: (param: string) => void;
@@ -13,7 +13,7 @@ export default function User(props: Props) {
   const [userMode, setUserMode] = useState<"signIn" | "welcome" | "signUp">(
     "signIn"
   );
-  const [usernameTemp, setUsernameTemp] = useState<string>("");
+  const { username } = useSelector((state: RootState) => state);
 
   useEffect(() => {
     axios
@@ -21,7 +21,6 @@ export default function User(props: Props) {
         withCredentials: true,
       })
       .then((res: AxiosResponse) => {
-        setUsernameTemp(res.data.username);
         setUserMode("welcome");
         dispatch(setUsername(res.data.username));
       })
@@ -53,7 +52,6 @@ export default function User(props: Props) {
           { withCredentials: true }
         )
         .then((res: AxiosResponse): void => {
-          setUsernameTemp(res.data.username);
           dispatch(setUsername(res.data.username));
           setUserMode("welcome");
         })
@@ -92,7 +90,6 @@ export default function User(props: Props) {
       axios
         .post("/api/signUp", { data }, { withCredentials: true })
         .then((res: AxiosResponse): void => {
-          setUsernameTemp(res.data.username);
           dispatch(setUsername(res.data.username));
           setUserMode("welcome");
           props.setModalMessage(res.data.message);
@@ -121,7 +118,6 @@ export default function User(props: Props) {
         withCredentials: true,
       })
       .then((): void => {
-        setUsernameTemp("");
         dispatch(setUsername(undefined));
         setUserMode("signIn");
       });
@@ -202,7 +198,7 @@ export default function User(props: Props) {
 
       {userMode === "welcome" && (
         <div className="user__welcome">
-          <p className="user__welcome__username">{usernameTemp}</p>
+          <p className="user__welcome__username">{username}</p>
           <button className="user__welcome__logOut" onClick={logOut}>
             LOG OUT
           </button>
