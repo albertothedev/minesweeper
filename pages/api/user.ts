@@ -1,17 +1,39 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
+import jwt from "jsonwebtoken";
+import { getCookie, hasCookie } from "cookies-next";
 
-import passport from "passport";
+import db from "config/firebase";
+import { type TCookie, type TUser } from "types";
 
 export default async function user(req: NextApiRequest, res: NextApiResponse) {
-  passport.authenticate(
-    "JWTFromCookie",
-    { session: false },
-    (err, user, info) => {
-      if (err) return res.status(500).send(err);
+  if (hasCookie("jwt", { req, res })) {
+    const cookie = getCookie("jwt", { req, res }) as string;
 
-      if (info) return res.status(400).send(info);
+    const tokenDecoded = jwt.verify(
+      cookie,
+      process.env.JWT_SECRET as string
+    ) as TCookie;
 
-      if (user) return res.status(200).json({ username: user.username });
+    if (tokenDecoded) {
+      try {
+        const usersSnapshot = await db
+          .collection("users")
+          .doc(tokenDecoded)
+          .get();
+
+        res.status(200).json({
+          username: (usersSnapshot.data() as TUser).username,
+          message: `you are logged in as ${
+            (usersSnapshot.data() as TUser).username
+          }`,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      res.status(401).end();
     }
-  )(req, res);
+  } else {
+    res.status(404).end();
+  }
 }

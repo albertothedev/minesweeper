@@ -1,21 +1,19 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 
-import dbConnect from "config/mongoose";
-import Game from "models/game.model";
-import { TGame } from "types/index";
+import db from "config/firebase";
 
 export default async function leaderboard(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  await dbConnect();
+  try {
+    const gamesSnapshot = await db
+      .collection("games")
+      .orderBy("time", "asc")
+      .get();
 
-  Game.find({}).exec((err, results: Array<TGame>) => {
-    if (err) return res.status(500).send(err);
-
-    const games: Array<TGame> = [];
-
-    results.forEach((result: TGame) => games.push(result));
-    return res.send(games);
-  });
+    res.status(200).send(gamesSnapshot.docs.map((doc) => doc.data()));
+  } catch (error) {
+    console.error(`Error getting collection: ${error}`);
+  }
 }
