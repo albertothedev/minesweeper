@@ -31,19 +31,19 @@ export default function User(props: Props) {
   function signIn(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
 
-    const username: string = (
+    const inputUsername: string = (
       document.querySelector(".user__signIn__username") as HTMLInputElement
     ).value.trim();
-    const password: string = (
+    const inputPassword: string = (
       document.querySelector(".user__signIn__password") as HTMLInputElement
     ).value.trim();
 
     const data = {
-      username,
-      password,
+      username: inputUsername,
+      password: inputPassword,
     };
 
-    if (username.length !== 0 && password.length !== 0)
+    if (inputUsername.length !== 0 && inputPassword.length !== 0)
       axios
         .post(
           "/api/signIn",
@@ -66,28 +66,28 @@ export default function User(props: Props) {
   function signUp(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
 
-    const username: string = (
+    const inputUsername: string = (
       document.querySelector(".user__signUp__username") as HTMLInputElement
     ).value.trim();
-    const password: string = (
+    const inputPassword: string = (
       document.querySelector(".user__signUp__password") as HTMLInputElement
     ).value.trim();
-    const passwordRepeat = (
+    const inputPasswordRepeat = (
       document.querySelector(
         ".user__signUp__passwordRepeat"
       ) as HTMLInputElement
     ).value.trim();
 
     const data = {
-      username,
-      password,
+      username: inputUsername,
+      password: inputPassword,
     };
 
     if (
-      password === passwordRepeat &&
-      password.length !== 0 &&
-      passwordRepeat.length !== 0 &&
-      username.length !== 0
+      inputPassword === inputPasswordRepeat &&
+      inputPassword.length !== 0 &&
+      inputPasswordRepeat.length !== 0 &&
+      inputUsername.length !== 0
     )
       axios
         .post("/api/signUp", { data }, { withCredentials: true })
@@ -101,16 +101,16 @@ export default function User(props: Props) {
           props.setModalMessage(error.message)
         );
     else if (
-      password !== passwordRepeat &&
-      password.length !== 0 &&
-      passwordRepeat.length !== 0 &&
-      username.length !== 0
+      inputPassword !== inputPasswordRepeat &&
+      inputPassword.length !== 0 &&
+      inputPasswordRepeat.length !== 0 &&
+      inputUsername.length !== 0
     )
       props.setModalMessage("passwords do not match");
     else if (
-      password.length === 0 ||
-      passwordRepeat.length === 0 ||
-      username.length === 0
+      inputPassword.length === 0 ||
+      inputPasswordRepeat.length === 0 ||
+      inputUsername.length === 0
     )
       props.setModalMessage("please fill all fields");
   }
