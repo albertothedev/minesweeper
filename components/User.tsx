@@ -37,12 +37,12 @@ export default function User(props: Props) {
       document.querySelector(".user__signIn__password") as HTMLInputElement
     ).value.trim();
 
-    const data = {
-      username: inputUsername,
-      password: inputPassword,
-    };
+    if (inputUsername.length !== 0 && inputPassword.length !== 0) {
+      const data = {
+        username: inputUsername,
+        password: inputPassword,
+      };
 
-    if (inputUsername.length !== 0 && inputPassword.length !== 0)
       axios
         .post(
           "/api/signIn",
@@ -58,7 +58,7 @@ export default function User(props: Props) {
         .catch((error: AxiosError): void =>
           props.setModalMessage(error.message)
         );
-    else props.setModalMessage("please fill all fields");
+    } else props.setModalMessage("please fill all fields");
   }
 
   function signUp(e: React.FormEvent<HTMLFormElement>): void {
@@ -76,17 +76,17 @@ export default function User(props: Props) {
       ) as HTMLInputElement
     ).value.trim();
 
-    const data = {
-      username: inputUsername,
-      password: inputPassword,
-    };
-
     if (
       inputPassword === inputPasswordRepeat &&
       inputPassword.length !== 0 &&
       inputPasswordRepeat.length !== 0 &&
       inputUsername.length !== 0
-    )
+    ) {
+      const data = {
+        username: inputUsername,
+        password: inputPassword,
+      };
+
       axios
         .post("/api/signUp", { data }, { withCredentials: true })
         .then((res: AxiosResponse): void => {
@@ -97,7 +97,7 @@ export default function User(props: Props) {
         .catch((error: AxiosError): void =>
           props.setModalMessage(error.message)
         );
-    else if (
+    } else if (
       inputPassword !== inputPasswordRepeat &&
       inputPassword.length !== 0 &&
       inputPasswordRepeat.length !== 0 &&
