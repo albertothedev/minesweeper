@@ -1,43 +1,44 @@
-import passport from "passport";
+import { type NextApiRequest, type NextApiResponse } from "next";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import express from "express";
+import { setCookie } from "cookies-next";
 
-module.exports = (app: express.Application) =>
-  app.post("/signIn", (req: express.Request, res: express.Response) =>
-    passport.authenticate("signIn", (err, user, info) => {
-      if (err)
-        return res.status(500).json({
-          message:
-            "there was a problem processing your request, please try again later",
-        });
+import db from "config/firebase";
 
-      if (info)
-        return res.status(500).json({
-          message:
-            "there was a problem processing your request, please try again later",
-        });
+export default async function signIn(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  try {
+    const usersSnapshot = await db
+      .collection("users")
+      .where("username", "==", req.body.data.username)
+      .get();
 
-      if (user)
-        req.login(user, { session: false }, (err2) => {
-          if (err2) return res.status(500).send(err2);
+    if (usersSnapshot.docs.length) {
+      usersSnapshot.docs.forEach(async (doc) => {
+        try {
+          await bcrypt.compare(req.body.data.password, doc.data().password);
 
-          const token = jwt.sign(
-            { _id: user._id },
-            process.env.JWT_SECRET as string
-          );
+          const token = jwt.sign(doc.id, process.env.JWT_SECRET as string);
 
-          res.cookie("jwt", token, { httpOnly: false });
+          setCookie("jwt", token, { httpOnly: true, req, res });
+
           res.status(200).json({
-            username: user.username,
-            token,
-            message: `you are logged in as ${user.username}`,
+            username: req.body.data.username,
+            message: `you are logged in as ${req.body.data.username}`,
           });
-        });
-
-      if (!user)
-        return res.status(404).json({
-          message:
-            "we couldn't find a user with that username and password combination",
-        });
-    })(req, res)
-  );
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    } else {
+      res.status(404).json({
+        message:
+          "we couldn't find a user with that username and password combination",
+      });
+    }
+  } catch (error) {
+    console.error(`Error getting collection: ${error}`);
+  }
+}

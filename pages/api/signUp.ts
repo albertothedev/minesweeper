@@ -1,38 +1,31 @@
-import passport from "passport";
+import { type NextApiRequest, type NextApiResponse } from "next";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import express from "express";
+import { setCookie } from "cookies-next";
 
-module.exports = (app: express.Application) =>
-  app.post("/signUp", (req: express.Request, res: express.Response) =>
-    passport.authenticate("signUp", (err, user, info) => {
-      if (err)
-        return res.status(500).json({
-          message:
-            "there was a problem processing your request, please try again later",
-        });
+import db from "config/firebase";
 
-      if (info)
-        return res.status(404).json({
-          message: "the username is already in use",
-        });
+export default async function leaderboard(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const newUser = {
+    username: req.body.data.username,
+    password: bcrypt.hashSync(req.body.data.password, 10),
+  };
 
-      if (user)
-        req.login(user, { session: false }, (err2) => {
-          if (err2)
-            return res.status(500).json({
-              message:
-                "there was a problem processing your request, please try again later",
-            });
+  try {
+    const user = await db.collection("users").add(newUser);
 
-          const token = jwt.sign(
-            { _id: user._id },
-            process.env.JWT_SECRET as string
-          );
+    const token = jwt.sign(user.id, process.env.JWT_SECRET as string);
 
-          res.cookie("jwt", token).status(200).json({
-            username: user.username,
-            message: `your account has been created`,
-          });
-        });
-    })(req, res)
-  );
+    setCookie("jwt", token, { httpOnly: true, req, res });
+
+    res.status(200).json({
+      username: req.body.data.username,
+      message: `Your account has been created`,
+    });
+  } catch (error) {
+    console.error(`Error adding document: ${error}`);
+  }
+}

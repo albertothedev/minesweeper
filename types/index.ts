@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 export type TCell = {
   id: string;
   row: number;
@@ -27,7 +25,9 @@ export type TGame = {
   time: number;
 };
 
-export interface UserDoc extends mongoose.Document {
+export type TUser = {
   username: string;
   password: string;
-}
+};
+
+export type TCookie = string;

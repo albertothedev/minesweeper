@@ -1,28 +1,13 @@
-import passport from "passport";
-import express from "express";
+import { type NextApiRequest, type NextApiResponse } from "next";
+import { deleteCookie } from "cookies-next";
 
-module.exports = (app: express.Application) =>
-  app.get("/logOut", (req: express.Request, res: express.Response) =>
-    passport.authenticate(
-      "JWTFromCookie",
-      { session: false },
-      (err, user, info) => {
-        if (err)
-          return res.status(500).json({
-            status: 500,
-            message:
-              "there was a problem processing your request, please try again later",
-          });
-        else if (info || !user)
-          return res.status(500).json({
-            status: 500,
-            message:
-              "there was a problem processing your request, please try again later",
-          });
-        else {
-          res.clearCookie("jwt");
-          res.status(200).end();
-        }
-      }
-    )(req, res)
-  );
+export default async function logOut(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  deleteCookie("jwt", { req, res });
+
+  return res.status(200).json({
+    message: "Successfully logged out",
+  });
+}
